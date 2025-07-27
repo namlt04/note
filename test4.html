@@ -1,0 +1,105 @@
+<HTML>
+<BODY ID=$class_name$ BGCOLOR=WHITE>
+    <label for="account">Account</label>
+    <input type="text" id="account"/> </br>
+
+    <label for="hoten">HoTen</label>
+    <input type="text" id="hoten" /> </br>
+
+    <label for="quequan">QueQuan</label>
+    <input type="text" id="quequan" /> </br>
+
+    <label for="gioitinh">GioiTinh</label>
+    <select id="gioitinh">
+        <option>Nam</option>
+        <option>Nữ</option>
+    </select> </br>
+
+    <label>NgaySinh</label>
+    <input type="text" id="ngaysinh" /> </br>
+
+
+    <label for="truonghoc">TruongHoc</label>
+    <input type="text" id="truonghoc" /> </br>
+
+    <label for="sodienthoai">SoDienThoai</label>
+    <input type="text" id="sodienthoai"/> </br>
+
+    <button type="button" id="okButton">OK</button>
+    <script>
+        function window.onOk() {
+            let ret = [];
+            let account = document.getElementById("account").value;
+            let hoten = document.getElementById("hoten").value;
+            let quequan = document.getElementById("quequan").value;
+            let ngaysinh = document.getElementById("ngaysinh").value;
+            let gioitinh = document.getElementById("gioitinh").value;
+            let truonghoc = document.getElementById("truonghoc").value;
+            let sodienthoai = document.getElementById("sodienthoai").value;
+
+
+            let noti = "";
+            if (!account) {
+                noti += "Account, ";
+            }
+
+            if (!quequan) {
+                noti += "QueQuan, ";
+            }
+
+            if (!hoten) {
+                noti += "HoTen, ";
+            }
+
+            if (!sodienthoai) {
+                noti += "SoDienThoai ";
+            }
+            noti += "không được bỏ trống!";
+            if (noti != "không được bỏ trống!") {
+                return noti;
+            } else if ((noti = CheckNumberPhone(sodienthoai)) != "") {
+                return noti;
+            }
+            else {
+                ret.push(account); 
+                ret.push(hoten); 
+                ret.push(quequan); 
+                ret.push(ngaysinh); 
+                ret.push(gioitinh); 
+                ret.push(truonghoc); 
+                ret.push(sodienthoai); 
+
+                return ret;
+            }
+
+        }
+        function CheckNumberPhone(SoDienThoai) {
+            if (SoDienThoai.length != 10 && SoDienThoai.length != 11) {
+                return "Chiều dài số điện thoại không hợp lệ";
+            }
+
+            let vec = [ "0", "84", "+84"];
+	        let check = false;
+            for (let i = 0; i <= 2; i++)
+            {
+                if (vec[i] == SoDienThoai.substring(0, i + 1))
+                    check = true;
+            }
+            if (!check) return "Sai định dạng số điện thoại";
+	        let tmp = SoDienThoai.substring(1);
+            for (let i = 0; i < tmp.length; i++)
+            {
+                if (tmp[i] < "0" || tmp[i] > "9")
+                    return "Số điện thoại chứa kí tự không hợp lệ";
+            }
+
+            return "";
+        }
+        function SetInformation() {
+
+        }
+    </script>
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+    <style>
+              .control {
+            width: 33.33%;
+            position: fixed;
+            bottom: 0;
+            height: 40px;
+            font-size: 16px;
+        }
+        table, th, td{
+            width :100%;
+            border: 1px solid;
+            border-color: black;
+            border-collapse : collapse;
+        }
+         
+        #add {
+            left: 0%;
+        }
+
+        #edit {
+            left: 33.33%;
+        }
+
+        #remove {
+            left: 66.66%;
+        }
+        tr.selected { 
+            background-color: aqua;
+        }
+
+
+ </style>
+ </HEAD>
+<BODY ID=CBai2Dlg BGCOLOR=white style="font-family:MS Shell Dlg;font-size:8">
+<table id="table">
+    <tr>
+    <th>ID</th>
+    <th>Account</th>
+    <th>HoTen</th>
+    <th>QueQuan</th>
+    <th>NgaySinh</th>
+    <th>GioiTinh</th>
+    <th>TruongHoc</th>
+    <th>SoDienThoai</th>
+    </tr>
+
+</table>
+
+<button type="button" id="add" class="control" onclick="addRow()">Add</button>
+<button type="button" id="edit" class="control">Edit</button>
+<button type="button" id="remove" class="control" onclick="remove()">Remove</button>
+<script>
+    function addRow()
+    {
+    let table = document.getElementById("table"); 
+    let row = table.insertRow(-1); 
+    let cell1 = row.insertCell(0); 
+    let cell2 = row.insertCell(1); 
+    cell1.innerHTML = "Le Thanh Nam"; 
+    cell2.innerHTML= "25"; 
+    row.addEventListener("click", function (){
+        this.classList.toggle("selected"); 
+    }); 
+    }
+    function remove() 
+    {
+        let listRecordSelected = recordSelected(); 
+        alert("Ban co muon xoa" +  listRecordSelected.length + " dong khong" ); 
+        // Goi den database
+    }
+    function edit()
+    {
+        
+        let listRecordSelected = recordSelected(); 
+        if ( listRecordSelected.length == 0 )
+        {
+            // Goi ra 
+        } else if (listRecordSelected.length > 1){
+            // goi ra 
+        } else {
+            // Goi ra chinh sua
+
+        }
+        
+
+    }
+    function recordSelected()
+    {
+        let ret = []; 
+        let table = document.getElementById("table"); 
+        for(let i = 0 ; i < table.rows.length; i++){
+            if (table.rows[i].classList.contains("selected")){
+                ret.push(i); 
+            }
+        }
+        return ret; 
+    }
+    
+
+</script>
+</BODY>
+</HTML>
