@@ -1,0 +1,17 @@
+
+custom Button
+test.Create(_T(""), WS_CHILD | WS_VISIBLE | BS_OWNERDRAW, rect, this, 1001);
+bị lỗi : 
+
+Debug Assertion Failed!
+Module: mfc140ud.dll
+File: winctrl1.cpp
+Line: 80
+
+Cách fix : 
+bỏ BS_OWNERDRAW
+Nguyên nhân: 
+BS_OWNERDRAW gửi WM_DRAWITEM tức sẽ gọi đến hàm DrawItem() thay vì OnPaint()
+Đây là 1 custom button ( mọi thứ trong class về button này đều được chỉnh sửa )
+nên chỉ Override OnPaint. Nút sẽ tự động gọi DrawItem của MFC, vì nó là subclass 
+nên không có dữ liệu m_hWnd -> dữ liệu không đúng kiểu -> lỗi 

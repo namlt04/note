@@ -1,0 +1,165 @@
+CCreateContext contextRegister = *pContext; 
+
+tạo 1 bản sao ( copy ) của đối tượng *pContext 
+
+CCreateContext : 
+
+pcontext chứa các thông tin : 
+- view class nào sẽ được tạo
+- document hiện tại
+- frame hiện tại, view hiện tại
+
+
+tạo nhiều view khác nhau: bằng cách tạo các context khác nhau
+nếu không tạo sẽ ảnh hưởng tới view trước => không tạo đúng view
+
+
+kiến trúc : Document / View architecture : tách phần dữ liệu ra khỏi giao diện hiển thị
+document : lưu trữ dữ liệu ( data, model của ứng dụng ): nội dung văn bản, danh sách sản phẩm 
+view : hiển thị dữ liệu từ document ra giao diện người dùng. cho phép người dùng tương tác để thay đổi dữ liệu
+Frame : cửa số chính chứa view. có thể chứa nhiều view con 
+
+
+RUNTIME_CLASS : Trả về con trỏ CRuntimeClass* , chứa thông tin của lớp (ClassName)
+
+tạo đối tượng động từ 1 lớp đã đăng kí vối hệ thống mfc
+so sánh kiểu của đối tượng tại runtime 
+tạo đối tượng hoặc kiểm tra kiểu tại thời gian chạy mfc
+
+GetParentFrame() hàm thành viên của lớp CView(), ( CfromView kế thừ aCView)
+trả về cn trỏ đến CFrameWnd( CMainFrame ) chứa iew hiện tại 
+
+(CMainFrame*) ép kiểu ( từ CFrameWnd* đến CMainFrame*) , de693 gọi các hàm đã định nghĩa
+
+CON TRỎ CFRAMEWND trong MFC LÀ 1 CON TRỎ TRỎ ĐẾN CỬA SỔ KHUGN, FRAME(WINDOW): CỬA SỐ CHÍNH 
+HOẶC CỬA SỔ CON CHỨA CÁC VIEW
+
+MAIN WINDOW : CỨA SỔ CHÍNH CỦA ỨNG DỤNG
+TRONG SDI
+MAIN WIDOW = CMAINFRAME
+
+childframe cửa cổ con : chứa 1 tài liệu, 1 hoặc nhiều view
+
+1. Đối tượng tĩnh : là đối tượng : 
++ được tự động tạo trên ngăn xếp 
+được hủy tự động khi ra khỏi khối lệnh hoặc hàm 
+Void Foo(){
+	CLoginView view; 
+}
+khi Foo() kết thúc, view sẽ tự động bị huy 
+
+2. Đối tượng động (dynamic object) là đối tượng : 
+được tạo thủ công bằng new
+tồn tại cho đến khi delete nó 
+lưu trong vùng nhớ heap ( động )
+
+CLoginView *pView = new CloginView 
+delete pView;
+
+MACRO MFC, lấy thông tin lớp ( class ) tại thời gian chạy, 
+có thể tạo đối tượng từ lớp đó dù không biết rõ tên lớp tại thời điểm biên dịch
+
+CreateView(&contextRegister): 
+gọi hàm trong lớp CSplitterWnd, tạo 1 view mới, contextRegister chứa thông tin về view cần tạo 
+- lớp view, document liên kết, framewindow
+
+STATIC_DOWNCAST (CFormView, ... ): ép kiểu (cast ) con trỏ từ lớp cha sang lớp con mà không  cần 
+kiểm tra thời gian chạy ( khác với DYNAMIC_DOWNCAST, kiểm tra kiểu lúc runtime)
+Cre
+
+MACRO : tên viết tắt thay thế cho 1 đoạn mã khác trước khi biên dịch, được định nghĩa bằng #define 
+ví dụ 
+#define ON_BN_CLICKED(id, memberFxn) \
+    { WM_COMMAND, BN_CLICKED, (WORD)id, (WORD)id, AfxSig_vv, \
+    (AFX_PMSG)(AFX_PMSGW)(void (AFX_MSG_CALL CWnd::*)(void))&memberFxn },
+trình tiền xử lí ( preprocessing ) sẽ thay thế ON_BN_CLICKED()  sẽ thay thế nó bằng đoạn mã sau đó ( dài hơn ) 
+
+
+
+MÔ HÌNH View - Document - frame
+kiến trúc Document / View Architecture: chia tách dữ liêu , giao diện và quản lí cửa sổ
+
+document: lưu trữ và quản lí dữ liệu
+view : hiển thị và giao tác dữ liệu
+frame : cửa sổ chứa view và giao diện người dùng 
+	Ví dụ : CFrameWnd, CMDIChildwndCmainFrame
+thường chứa menu, toobar, statusbar, và view,
+
+quá trình hệ thống hoạt động
+
+CMFCAppclication1App::InitInstance() khởi động 
+____________________________________ tạo cửa sổ chính ( CMainFrame ) và hiển thị 
+trong quá trình tạo CMainFrame, Oncreate() được gọi, OncreateClient() được gọi để tạo các view
+Cửa sổ chính MainFrame được hiển thị lên màn hình với view mặc đinh
+
+OnCreate() chỉ được sử dụng để khởi tạo các thành phần của cửa sổ : toolbar, statusbar, menu
+
+OnCreateClient chuyên dùng tạo các vùng làm việc, nơi các vui xuất hiện
+
+CFrameWn: lớp khung cửa sổ ( frame window cơ bản của MFC, dùng làm cửa sổ chính các thành phần như menu, status bar và quan trọng nhất là vùng client để chứa view ( giao diện hiển thị nội dung ) 
+
+#include từ 2 file ( file A #inlcude "B" . file B include "A" )
+pragma once , complier sẽ bỏ qua phần include trùng lặp, tức là thực thi chỉ 1 lần hàm này
+---- compiler sẽ chỉ thực thi File có "#pragema once" 1 lần duy nhất , khi có 1 file nào khc1 include file đã có "#pragma once" thì nó sẽ dùng mà không include thêm vào và biên dịch lần nữa
+
+
+View động : là view được tạo ra thủ công trong lúc chương trình đang chạy
+view cố định ( static view ) tạo sẵn khi chương trình khởi động, dựa trên AppWizard, DocTemplate, hoặc được gán cố định vào Frame
+
+ví dụ sau là đang tạo View cố định
+
+CSingleDocTemplate* pDocTemplate = new CSingleDocTemplate(
+    IDR_MAINFRAME,
+    RUNTIME_CLASS(CMyDoc),
+    RUNTIME_CLASS(CMainFrame),
+    RUNTIME_CLASS(CMyView)     // View cố định!
+);
+AddDocTemplate(pDocTemplate);
+
+Như vậy, CMyView sẽ cố định, mặc định và không đổi trong quá trình chay
+
+-----------
+Quá trình tạo 1 view động ( Runtime ) 
+Tạo CCreateContext : Class này sẽ cung cấp các thông tin để có thể khởi tạo vie w
+FrameWnd::CreateView : tạo view mới trong CFrameWnd
+Static_Downcast, ép kiểu về lớp con của CView
+
+STATIC_DOWNCAST : macro của mfc để ép kiểu (cast) giữa các lớp trong hệ thống kế thừa, mà không kiểm tra trong lúc chạy 
+
+CFormView : CScrollView
+CScrollView : CView
+
+CListBox :: CWnd : hiển thị danh sách các dòng đơn giản 
+CListCtrl:: CWnd : điêu khiển danh sách nâng cao ( list view control ) có nhiều chế độ hiển thị ( report, icon, smallicon, tile )
+CWnd
+
+Mô hình kế thừa từ CObject
+CObject
+ ├── CCmdTarget
+ │     ├── CWnd
+ │     │     ├── CControlBar
+ │     │     ├── CFrameWnd : CreateView CMainFrame(thường được kế thừa ở đây 
+ │     │     ├── CView
+ │     │     │     ├── CScrollView
+ │     │     │     │     ├── CFormView
+ │     │     │     │     └── CEditView
+ │     │     │     ├── CListView
+ │     │     │     ├── CTreeView
+ │     │     │     └── CView (base class)
+ │     │     ├── CButton
+ │     │     ├── CEdit
+ │     │     ├── CListBox
+ │     │     └── CListCtrl -> tạo nên CBubbleMessage
+ │     ├── CCmdUI
+ │     └── ... (các lớp liên quan tới command)
+ ├── CArchive
+ ├── CException
+ ├── CString
+ ├── CFile
+ └── ... (các lớp hỗ trợ khác)
+
+
+CView* CFrameWnd::CreateView(
+   CCreateContext* pContext
+);
+CreateView trả về CView

@@ -1,3 +1,9 @@
+
+Quá trình biên dịch gồm 4 giai đoạn 
+- Processing : xử lí các dòng #include, #define, #pragma
+- Compilation : chuyển mã nguồn (.c , .cpp ) thành mã máy dạng .obj ( object file ) 
+- Linking : ghép các .obje lại và liên kết với thư viện .lib, tạo ra file thực thi .exe
+==== 
 # DLL 
 DYNAMIC LINKED LIBRARY
 Thư viện liên kết động, 1 file chứa mã và dữ liệu, có thể được nhiều chương trình cùng sử dụng trong lúc chay

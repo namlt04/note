@@ -1,0 +1,83 @@
+
+Lấy chuỗi từ CEdit GetWindowsText
+
+
+
+Kiểu dữ liệu chính 
+MFC Mở rộng ( wrapper ) : CString , CPoint, CRect, CSize, CTime, COleDateTiem, Carray, CLIst, CMap, CFile, CWnd, CDC, CFont, CPen,CBrush
+Kiểu dữ liệu cơ bản ( MFC định nghĩa lại ) 
+
+BOOL
+BYTE
+WORD
+DWORD
+UINT
+LOG 
+LPCTSR
+LPTSTR
+HANDLE
+HWND
+HDC
+
+char 1 byte : dùng cho ansi hoặc ascii
+wchar_t 2 byte hoặc 4 byte: utf-16 trên window 
+L"hello" chuỗi unicode utf-16
+
+GetWindowText() Trả về CString chứa wchar_t*
+_T() chuyển chuỗi thành kiểu phù hợp với unicode hoặc ansi
+
+
+BEGIN_MESSAGE_MAP(CMyDialog, CDialogEx)
+    ON_BN_CLICKED(IDC_BTN_HELLO, &CMyDialog::OnBnClickedHello)
+END_MESSAGE_MAP()
+
+BEGIN_MESSAGE_MAP(TheClass, BaseClass)
+// ánh xạ thông điệp ở đây
+END_MESSAGE_MAP()
+
+TheClass	Tên lớp bạn đang định nghĩa message map, ví dụ: CMyDialog
+BaseClass	Lớp cha kế thừa từ TheClass, thường là CDialogEx, CWnd, CFrameWnd,... Đây là nơi định nghĩa các message map gốc, được mở rộng ở TheClass
+
+ON_BN_CLICKED(IDC_BTN_HELLO, &CMyDialog::OnBnClickedHello)
+
+ON_BN_CLICKED : MACRO ÁNH XẠ THÔNG ĐIỆP 
+IDC_BTN_HELLO : ID CỦA BUTTON XỬ LÍ 
+&cMYdIALOG::OnBnClickedHello : HÀM XỬ LÍ  => tham số này ( tham số thứ 2 phải là 1 con trỏ trỏ tới hàm xử lí ) 
+
+🔘 Đối với Button:
+Macro	Ý nghĩa
+ON_BN_CLICKED	Nhấn nút
+ON_BN_DOUBLECLICKED	Nhấn đúp nút
+ON_BN_SETFOCUS	Button được focus
+ON_BN_KILLFOCUS	Button mất focus
+
+📝 Đối với Edit Control:
+Macro	Ý nghĩa
+ON_EN_CHANGE	Nội dung thay đổi
+ON_EN_UPDATE	Trước khi cập nhật
+ON_EN_SETFOCUS	Được focus
+ON_EN_KILLFOCUS	Mất focus
+
+📋 Đối với ComboBox:
+Macro	Ý nghĩa
+ON_CBN_SELCHANGE	Đổi lựa chọn
+ON_CBN_EDITCHANGE	Nội dung phần edit thay đổi
+ON_CBN_DROPDOWN	Danh sách xổ xuống
+ON_CBN_CLOSEUP	Danh sách đóng lại
+
+📄 Đối với ListBox:
+Macro	Ý nghĩa
+ON_LBN_SELCHANGE	Đổi dòng được chọn
+ON_LBN_DBLCLK	Nhấn đúp dòng
+ON_LBN_SETFOCUS	Focus vào listbox
+
+📦 Khác (Window thông thường):
+Macro	Ý nghĩa
+ON_WM_PAINT()	Vẽ lại cửa sổ
+ON_WM_CLOSE()	Đóng cửa sổ
+ON_WM_CTLCOLOR()	Xử lý màu control
+ON_WM_KEYDOWN()	Nhấn phím
+ON_WM_MOUSEMOVE()	Di chuyển chuột
+
+---------------------------------------------------------------
+bảng ánh xạ

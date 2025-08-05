@@ -1,20 +1,24 @@
-# dom : document object modle
+# một số cú pháp cho MFC
+CComPtr<T> con trỏ thông minh, tự động delete sau khi ra khỏi scope ( phạm vi của hàm )
+CComQIPtr<T> CCom Query Interface Ptr, con trỏ truy vấn giao diện thông minh
+CComBSTR  thay thế cho BSTR cũ
+- thường sử dụng đến 
+IDHTMLDocument2 
+    + GetDHTMLDocument
+    + get_Script // Để lấy 1 tên 1 hàm js
+IDHTMLDocment3
+có lấy element theo ID, phù hợp tương tác với từng input, text 
 
+
+# COM : COMPONENT OBJECT MODEL
+Công nghệ giúp các thành phần đối tượng (object) giao tiếp với nhau dù bất kể chúng sử dụng ngôn ngữ nào di
+
+- Là 1 chuẩn kĩ thuật thiết để các thành phần phần mềm có thể tương tác với nhau bất kể được viết bằng phần mềm nào
+tương tự 1 quy tắc và giao thức chuẩn, dựa vào quy tắc này để tạo ra các thành phần cằm vào và chạy trong nhiều chương trình khác nhau
+
+# DOM : document object modle
 cho phép truy cập và thao tác với HTML từ c++ và ngược lại 
-IHTMLDocument2
-IHTMLElement
 
-
-
-IHTMLElement: interface định danh các phần tử của html
-+ Mã GUID định danh IHTMLElement : IDD_IHTMLElement
-+ IDD_IHTMLElement được định nghĩa trong mshtml.h
-
-Ví dụ Giá trị cụ thể của IDD
-DEFINE_GUID(IID_IHTMLElement, 
-0x3050f1ff, 0x98b5, 0x11cf, 0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb);
-
-Thường được sử dụng khi QueryInterface 
 
 ## query interface
 
@@ -22,25 +26,6 @@ một đối tượng COM (component object model) có thể hỗ trợ nhiều 
 interface : tập hợp các hàm thuần ảo
 IID : GUID xác định duy nhất 1 interface 
 com object đối tượng thực sự cài đặt interface
-<Mỗi phần tử trong trang web được ánh xạ 1 comobject>
-
-Ví dụ: 
-<table>
-<td>
-<tr>
-
-tất cả đều là com object
-query interface láy interface khác cùng một đối tượng com
-
-IHTMLElement : là interface cơ bản cho mọi phần tử HTML
-các hàm chung của IHTMLElement
-get_id
-put_innerHTML
-click 
-put_className
-==> CHỈ CÓ CÁC CHỨC NĂNG CHUNG NHẤT
-( ví dụ , không thêm thêm dòng insertRow)
-
 IHTMLTable :: <table> :: 	insertRow, deleteRow, get_rows()
 IHTMLTableRow :: <tr> :: 	insertCell, deleteCell, get_cells()
 IHTMLTableCell :: <td> ::colSpan, rowSpan, align,...
@@ -90,7 +75,7 @@ dùng là wchar_t* vẫn hoàn toàn đúng (wchar_t dùng 2 byte để mã hóa
 # _T("")
      Tùy vào chế độ biên dịch mà nó có thể là char* hoặc wchar_t*, do vậy ko để dùng với olechar
 
-# 
+# Tra cứu tên của hàm
 spScript->GetIDsOfNames(IID_NULL, &szFunc, 1, LOCALE_USER_DEFAULT, &dispid);
 
 gọi phương thức com để lấy dispid ( dispatch identifier) tương ứng với tên hàm javascript muốn gọi
@@ -106,10 +91,65 @@ HRESULT GetIDsOfNames(
 
 =>> tra cứu tên hàm javascript để lấy tương ứng, dùng ID tương ứng đó để gọi Invoke()
 
-// note
-// bấm nút add
-// gọi dialog, nhập xong dữ liệu, trả về, 
-// gửi dữ liệu về , truy vấn lên, đưa vào để add
 
-# MFC LÀ CÔNG NGHỆ CŨ,
-không thể sử dụng let cho javascript
+
+
+
+
+Example:
+```cpp
+// Lấy dữ liệu hoặc đẩy dữ liệu vào tag <input>
+CComPtr<IHTMLDocument2> spDoc2; 
+GetDHTMLDocument(&spDoc2); 
+CComQIPtr<IHTMLDocument> spDoc3 = spDoc2; // Chuyển sang sử dụng Doc3 vì Doc3 mới có hàm GetId
+CComPtr<IHTMLElement> spEle; 
+spDoc3->getElementById(/* Tên kiểu dữ liệu BSTR : CComBSTR(L"")*/, &spEle);
+CComQIPtr<IHTMLInputTextElement> spInput; 
+CComBSTR value = nullptr;
+spInput->get_value(&value); // lấy dữ liệu
+spInput->put_value(CComBSTR(L"")); // đẩy dữ liệu
+```
+
+```cpp
+// Dùng để gọi hàm trong Script
+CComPtr<IHTMLDocument2> spDoc2;
+CComPtr<IDispatch> spScript; 
+spDoc2->get_Script(&spScript); 
+
+OLECHAR* nameFunc = L"nameFunc"; 
+DISPID pid; 
+spScript->GetIDsOfNames(IID_NULL, &nameFunc, 1, LOCALE_USER_DEFAULT, &pid); 
+
+CComVariant res;
+DISPPARAMS dp = {nullptr, nullptr, 0, 0}; 
+// dp = { doi_so(nguoc_thu_tu), doi_so_co_ten(it_dung), so_doi_so, so_doi_so_co_ten}
+
+spScript->Invoke(pid, IID_NULL, LOCALE_USER_DEFAULT, DISPATCH_METHOD, &dp, &result, nullptr, nullptr); // Gọi hàm
+CComBSTR bstr = result.bstrVal; // lấy kết quả trả về
+
+CStringW cStrW(bstr); 
+```
+# Note_1 
+Trong truong hợp hàm có 2 đối số . Ví dụ
+```javascript
+function solve(a, b){
+
+}
+```
+Ta có thể truyền với DISPPARAM như sau 
+```cpp
+CComVariant args[2]; 
+args[0] = gia_tri_doi_so_1; 
+args[1] = gia_tri_doi_so_0; 
+```
+# Note_2
+Trong trường hợp truyền vào String
+```javascript
+funtion solve(str){
+
+}
+```
+Ta khai báo 
+CComBSTR bstr = L"Mang truyen vao";
+CComVariant param(bstr);
+// bstr sẽ tự được sắp xếp vào chuẩn param.valBstr

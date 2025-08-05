@@ -1,0 +1,62 @@
+std::mutex
+
+bảo về Queue khỏi truy cập đồng thời
+- Có nhiều thread, và cùng muốn truy cập vào queue, mutex sẽ là cơ chế bảo vệ
+
+std::condition_variable : cho phép luồng chờ đợi có hiệu quả khi queue trống hoặc có dữ liệu mới 
+
+
+struct ApiResponse {
+    int statusCode;
+    std::string body;
+};
+
+struct ApiRequest {
+    std::string endpoint; // địa chỉ endpoint ví dụ : /user/info, api/login
+    std::string payload; // Dữ liệu gửi lên
+
+    // Callback khi nhận được kết quả
+    std::function<void(const ApiResponse&)> onResponse; hàm callback xử lí kết quả trả về từ api
+
+};
+
+std::function cho phép lưu một hàm, lambda, hoặc callable object
+const ApiResponse&: hàm call back nhận kết quả trả về của api để xử lí tiếp 
+
+ví dụ : 
+ApiRequest req;
+req.endpoint = "/user/info";
+req.payload = "{}";
+req.onResponse = [](const ApiResponse& res) {
+    if (res.statusCode == 200) {
+        std::cout << "User info: " << res.body << std::endl;
+    } else {
+        std::cout << "Error: " << res.statusCode << std::endl;
+    }
+};
+
+
+
+tạo thread chạy nền với có queue
+đưa từng request vào queue. Sau khi cpprestsdk phản hồi thì mới tiếp tục xử lí tiếp 
+request có trong queue 
+
+
+$Bearer ${token}
+
+
+mainService
+SendMessage
+
+
+GetInformation(CString fullName,file, avatar, token)
+Post()
+
+
+
+UpdateInformation
+GetFriendList
+GetMessage
+GetImage
+GetFile
+GetAvatar

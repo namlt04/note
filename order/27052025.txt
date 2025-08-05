@@ -1,0 +1,137 @@
+scaffold : xương sống, xây dưng theo chuẩn materal design, cung cấp bố cục khung giao diện 
+appBar
+body
+background Color : màu nền
+primary, quyết định appbar có năm trong vùng safearea ko 
+
+named parameter ( tham số có tên )
+
+child : dùng cho widget  chỉ chứa một widget con bên trong
+
+1 số widget căn 
+
+center căn chỉnh theo cả chiều ngang và chiều dọc
+
+align : căn theo vị trí bất kì trong vùng cha ( qua alignment ) 
+
+align(
+	alignment: Alignment.topRight, 
+	child : Text("Xin chao"), 
+) 
+
+
+Căn giữa	Center, Align
+Căn theo góc	Align, Positioned
+Thêm khoảng cách	Padding, Container, SizedBox
+Căn trong Row/Col	mainAxisAlignment, crossAxisAlignment
+Tự mở rộng	Expanded, Flexible, Spacer
+
+phương thức build:
+là phương thức bắt buộc phải có trong statelesswidget hoặc statefulWidget
+trả về 1 widget để hiển thị trên 1 màn hình
+nhận tham số buildcontext context
+tham số buildcontext context là tham số truyền vào, dùng để truy cập thông tin về vị trí widget trong cây, them, mediaquery
+
+
+so sánh final và const 
+- cả 2 đều không thể thay đổi sau khi gán giá trị 
+- thời điểm gán 
++ final : chạy chương trình
++ const : biên dịch
+- Khởi tạo lại
++ final : dùng để tạo nhiều bản sao khác nhau
++ const : tái sử dụng cùng 1 instance
+- thường dugn2 khi 
++ final : giá trị chỉ được biết khi chay 
++ giá trị đã biết ngay lúc viết code
+
+runtime : khi chạy chương rình
+compile-time: khi biên dịch code
+
+
+kiểu dữ liệu:
+dynamic : kiểu dữ liệu động, không kiểm tra thời điểm biên dịch, kiểm tra ở thời điểm chạy
+Object : kiểu cơ bản nhất trong dart, tất cả class đều kế thừa từ object
+var : khai báo biến mà Dart tự động suy luận kiểu dữ liệu dựa trên giá trị gán cho biến đó 
+
+var : nếu chưa gán giá trị ( var x ) thì nó sẽ là dynamic
+var : nếu đã gán giá trị ( var x = 10 ) thì nó tự động chuyển x thành int rồi
+
+late : khai báo biến nhưng khởi tạo muộn ( lazy initialization ) 
++ không cần khởi tạo giá trị ngay khi khai báo biến
++ bảo đảm sẽ gán giá trị cho biến đó trước khi dùng
++ truy cập bien1 đó mà chưa gán giá trị, dart báo lỗi 
+
+
+
+
+
+
+
+Chỉnh cỡ chữ Text field : dùng textStyle
+
+
+
+
+body: Center(
+          child: Column(
+
+            children: [
+              Text(
+                "BKAV Chat",
+                style: TextStyle(
+                  color: Color(0xFF146AE0),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 24,
+                ),
+              ),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: const Text("Username")
+              ),
+              TextField(
+          
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: const Text("Password"),
+              ),
+              TextField(
+                obscureText: true,
+              ),
+              ElevatedButton(
+
+
+                  onPressed: (){
+
+                  },
+                  child: Text("Đăng nhập"),
+                  style : ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14)
+                    ),
+                    fixedSize: Size(327,48),
+                    backgroundColor: Color(0xFF6783E7),
+                    foregroundColor: Colors.white,
+                  )
+              ),
+              TextButton(
+                onPressed: () {
+                  print("Click Dang ki")
+                },
+                child: Text(
+                    "Đăng kí",
+                    style : TextStyle(
+                      color: Color(0xFF047DE7),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                ),
+
+
+              ),
+            ],
+          
+          ),
+        ),
+      ),
