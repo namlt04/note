@@ -1,0 +1,91 @@
+OnCreateClient
+
+- Hàm được gọi bởi MFC sau khi cửa sổ đã được tạo, trước khi vùng (client area : vùng hiển thị 
+chính được tạo ra ) 
+- Dùng để tạo và gắn các view vào client area của frame 
+- Trong cấu trúc Doc/View, phải được cấp CCreateContext* , OnCreateClient là nơi phù hợp
+
+BOOL CMainFrame::OnCreateClient(LPCREATESTRUT /**/, CreateContext* pContext)
+{
+	spliiter.CreateView(0,0, RUNTIME_CLASS(CLeftview), CSize(x,y), pContext); 
+	// Nếu chỉ duy nhất 1 hàng, tham số chiều cao là không quan trọng 
+
+	return TRUE;
+}
+CreateStatic : tạo 1 splitter tĩnh, có số hàng , cột cố định, không thể thay đổi 
+
+cú pháp BOOL CreateStatic(CWnd* pParentWnd, int nRows, int nCols, DWORD dwStyle = WS_CHILD | WS_VISIBLE, UINT nID = AFX_IDW_PANE_FIRST);
+
+
+--- 
+IMPLEMENT_DYNCREATE(classname, baseclass)
+-> tạo đối tượng dộng ( dynamic creation ) trong kiến trúc document/view của mfc
+
+classname : class muốn tạo động 
+baseclass: lớp cơ sở kế thừa
+bắt buộc phải có nếu muốn dùng RUNTIME_CLASS
+
+
+----
+CTreeCtrl là 1 control, vì thế vẫn phải create 
+----
+Kế thừa CView, thì bắt buộc phải ghi đè onDraw 
+
+RegOpenKeyEx(hroot, subKeyPath, 0 , KEYREAD, &hKey)
+
+reopenkeyex 
+registry open key extended : dùng để một khóa trong window registry nhằm đọc, ghi, hoặc kiểm tra thông tin trong khóa đó 
+
+các tham số 
+hroot : khóa gốc, 1 trong 5 khóa gốc
+subkeyPath : link tới khóa đó 
+0 : mặc định 
+KEYREAD : CÓ THỂ THAY BẰNG KEYTWRITE HOẶC KEY_ALL_ACCESS
+
+mở thanh công nhận được 1 handle để
+đọc, ghi, xóa, duyệt các khóa con
+
+
+ví dụ : đang ở HKEY_USER
+tìm tất cả subkey của hkeyuser 
+
+
+LONG RegQueryInfoKey(
+  HKEY      hKey,
+  LPTSTR    lpClass,
+  LPDWORD   lpcchClass,
+  LPDWORD   lpReserved,
+  LPDWORD   lpcSubKeys,
+  LPDWORD   lpcbMaxSubKeyLen,
+  LPDWORD   lpcbMaxClassLen,
+  LPDWORD   lpcValues,
+  LPDWORD   lpcbMaxValueNameLen,
+  LPDWORD   lpcbMaxValueLen,
+  LPDWORD   lpcbSecurityDescriptor,
+  PFILETIME lpftLastWriteTime
+);
+
+lấy thông tin tổng quát của registry đã được mở 
+bao gồm : khóa con
+giá trị
+độ dài tối đa của tên khóa
+tên giá trị
+
+
+CString GetFullRegistryPath(CTreeCtrl& tree, HTREEITEM hItem)
+{
+    CString path, part;
+
+    while (hItem != NULL)
+    {
+        part = tree.GetItemText(hItem);
+        if (!path.IsEmpty())
+            path = part + _T("\\") + path;
+        else
+            path = part;
+
+        hItem = tree.GetParentItem(hItem);
+    }
+
+    return path;
+}
